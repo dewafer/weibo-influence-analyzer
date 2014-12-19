@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="weibo_influence_analyzer">
+    
+  <property name="debuglevel" value="source,lines,vars" />
+  <property name="target" value="1.7" />
+  <property name="source" value="1.7" />
+  <property name="warname" value="${ant.project.name}.war" />
+  <property name="artifact_dir" value="${ARCHIVE_DIR}"/>
+  
+  <path id="classpathDir">
+    <pathelement location="bin" />
+	<fileset dir="WebContent"> 
+        <include name="**/*.jar"/> 
+    </fileset>
+	<fileset dir="lib"> 
+        <include name="*.jar"/> 
+    </fileset>
+  </path>
+  
+  <target name="init">
+    <mkdir dir="bin" />
+    <mkdir dir="lib" />
+    <copy includeemptydirs="false" todir="bin">
+      <fileset dir="src">
+        <exclude name="**/*.java" />
+      </fileset>
+    </copy>
+    <copy includeemptydirs="false" todir="bin">
+      <fileset dir="WebContent" />
+    </copy>
+	<echo message="Copy files to ${artifact_dir} for deployment"/>
+	<copy todir="${artifact_dir}">
+      <fileset file="manifest.yml" />
+    </copy>
+    <echo message="make WEB-INF/classes" />
+    <mkdir dir="bin/WEB-INF/classes" />
+  </target>
+  
+  <target name="clean">
+    <delete dir="bin" />
+  </target>
+  
+  <target name="build" depends="build-project,build-war" />
+  
+  <target name="cleanall" depends="clean" />
+  
+  <target name="build-project" depends="init">
+    <echo message="${ant.project.name}: ${ant.file}" />
+    <javac debug="true" debuglevel="${debuglevel}" destdir="bin/WEB-INF/classes" source="${source}" target="${target}" includeantruntime="false">
+      	<src path="src" />
+  		<classpath refid="classpathDir"/>
+    </javac>
+  </target>
+  
+  <target name="build-war" depends="build-project">
+    <war destfile="${artifact_dir}/${warname}" basedir="bin" />
+  </target>
+
+  
+</project>

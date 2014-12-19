@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>微博影响力分析器</title>
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="bootstrap-responsive.css" rel="stylesheet">
+<link href="bootstrap.css" rel="stylesheet">
+
+<style type="text/css">
+body {
+	padding-top: 60px;
+	/* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+/* Custom container */
+.container-narrow {
+	margin: 0 auto;
+	max-width: 900px;
+	border-style: solid;
+	border-color: transparent;
+	background-color: #D8D8D8;
+	z-index: 9;
+	height: 100%;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}
+
+.container-narrow>hr {
+	margin: 30px 0;
+}
+
+.sidebar-nav {
+	padding: 20px 0;
+}
+
+@media ( max-width : 980px) {
+	/* Enable use of floated navbar text */
+	.navbar-text.pull-right {
+		float: none;
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+}
+</style>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+	var alertStatus = false;
+	$(document)
+			.ready(
+					function() {
+
+						/* "Encountered a problem fetching data from Twitter.\n"
+						+ "Check the twitter handle you entered to ensure that it is spelled correctly.\n\n"
+						+ "Additionally, some handles are set to private and can't be accessed without permission."; */
+						var querystring = window.location.search;
+						if (querystring.indexOf('errorcode-1') > -1) {
+							setAlert("Invalid input: Make sure the weibo handle you're searching for exists and is not set to private.");
+						} else if (querystring.indexOf('errorcode215') > -1) {
+							setAlert("Autorization rejected.");
+						} else if (querystring.indexOf('errorcode99') > -1) {
+							setAlert("Encountered a problem fetching data from Weibo.")
+						} else {
+							var alertbox = document.getElementById('alertbox')
+							var childs = alertbox.childNodes;
+							while(childs.length > 0){
+								alertbox.removeChild(childs[childs.length - 1]);
+							}
+							alertStatus = false;
+						}
+
+					});
+	// Displays an alert underneath the form.
+	function setAlert(innerText) {
+		if (alertStatus == false) {
+			var iDiv = document.createElement('div');
+			iDiv.id = 'alert';
+			iDiv.className = 'alert alert-danger alert-dismissable';
+			iDiv.innerHTML = innerText;
+
+			var dismissbtn = document.createElement('button');
+			dismissbtn.type = 'button';
+			dismissbtn.className = 'close';
+			dismissbtn.setAttribute('data-dismiss', 'alert')
+			dismissbtn.innerHTML = '&times;';
+			iDiv.appendChild(dismissbtn);
+
+			document.getElementById('alertbox').appendChild(iDiv);
+			alertStatus = true;
+		}
+	}
+</script>
+</head>
+<body>
+	<script src="bootstrap.min.js"></script>
+	<script src="bootstrap.js"></script>
+	<script src="bootstrap-tooltip.js"></script>
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+
+				<a class="brand pull-left" href="index.html"><em>Weibo
+						Influence Analyzer </em><small>v1.1</small></a>
+
+				<div class="nav-collapse collapse"></div>
+				<!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+	<!-- end of div for nav bar-->
+
+	<div class="container">
+		<div id="alertbox"></div>
+		<div class="alert alert-warning">
+		因新浪微博API限制，处于开发阶段的APP，仅有指定的开发者才能正常登录，更多信息请<a href="http://open.weibo.com/qa/index.php?qa=159" target="_blank">点击这里</a>。
+		<a href="https://github.com/dewafer/weibo-influence-analyzer/issues" target="_blank">提供反馈信息</a>。
+		<a href="https://github.com/dewafer/weibo-influence-analyzer/" target="_blank">查看本应用源代码</a>。
+		</div>
+		<div class="hero-unit">
+			<div>
+				<h2 class="text-center">
+					<img src="WEIBO_LOGO_64x64.png" class="img-rounded"><em>微博影响力分析器</em>
+				</h2>
+			</div>
+		</div>
+		<!-- end of the hero-unit-->
+		<div class="row">
+			<div class="text-center">
+				<a href="login"><img alt="使用微博登录。"
+					src="WEIBO_LOGIN_48.png"></a>
+			</div>
+		</div>
+
+		<div class="row">&nbsp;</div>
+		<div class="row">
+			<div class="text-center">
+				<p style="text-align: center">
+					<a href="DisplayAll"
+						class="btn btn-primary">查看数据库</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- end of the container-->
+</body>
+</html>

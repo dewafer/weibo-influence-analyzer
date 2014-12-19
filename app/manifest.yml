@@ -1,0 +1,10 @@
+---
+applications:
+- name: weibo_influence_analyzer_cloudant
+  host: weiboAnalyzer2
+  disk: 1024M
+  mem: 512M
+  instances: 1
+  path: weibo_influence_analyzer.war
+  services:
+  - Cloudant JSONDB-4w
