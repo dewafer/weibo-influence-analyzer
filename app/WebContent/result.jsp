@@ -108,50 +108,59 @@ function initialize() {
 			map.centerAndZoom(point,5);
 		}
 		
+		var loc1;
 		<%	
 			List<Status> result1 = (List<Status>) request.getAttribute("result1");
 			for(Status status : result1 ) {
 				String text = status.getText().replace("\"", "'").replace("\n", " ").replace("\'", "");
 				text = " "+text+" ";
-				String location = status.getUser().getLocation();
+				String location = "{ \"address\":\"" + status.getUser().getLocation() + "\" }";
+				if(status.getGeo() != null && status.getGeo().length() > 0 && status.getGeo() != "null"){
+					location = status.getGeo();
+				}
 				String screenName = status.getUser().getScreenName();
 				String prof_img = status.getUser().getProfileImageURL().toString();
 			
 		%>
 		
-		var loc1 = "<%= location %>";
-		geocoder.getPoint(loc1, function (point) {
-		// console.debug("Check here: ", new_result)
-		var loc = "<%= location %>";
-		var txt = '<%= text %>';
-		var scrName = '<%= screenName %>';
-		var profile_img = '<%= prof_img %>';
-		
-		var contentString = '<div id="content">'+
-		      '<div id="siteNotice">'+
-		      '</div>'+
-		      '<h3 id="firstHeading" class="firstHeading"><img id="profile_img" src='+profile_img+' class="img-rounded">'+ scrName+'</h3>'+
-		      '<div id="bodyContent">'+
-		      txt  + 
-		      '</div>'+
-		      '</div>';
-
-		var infowindow = new BMap.InfoWindow(contentString);  // 创建信息窗口对象
-
-		var marker = new BMap.Marker(point);
-		map.addOverlay(marker);
-		marker.addEventListener("click", function(){          
-			   this.openInfoWindow(infoWindow);
-			   //图片加载完毕重绘infowindow
-			   document.getElementById('profile_img').onload = function (){
-				   infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
-			   }
+		loc1 = JSON.stringify("<%= location %>");
+		console.log(loc1);
+		if(loc1.longitude && loc1.latitude){
+			drawBaiduPoint(new Point(loc1.longitude, loc1.latitude), '<%=text%>','<%=screenName%>','<%=prof_img%>');
+		} else {
+			geocoder.getPoint(loc1.address, function (point) {
+				drawBaiduPoint(point, '<%=text%>','<%=screenName%>','<%=prof_img%>');
 			});
-		
-		});
+		}
+
 		<%
 			}
 		%>	
+		
+		function drawBaiduPoint (point, text, scrName, profileImg){		
+			var contentString = '<div id="content">'+
+			      '<div id="siteNotice">'+
+			      '</div>'+
+			      '<h3 id="firstHeading" class="firstHeading"><img id="profile_img" src='+profileImg+' class="img-rounded">'+ scrName+'</h3>'+
+			      '<div id="bodyContent">'+
+			      txt  + 
+			      '</div>'+
+			      '</div>';
+	
+			var infowindow = new BMap.InfoWindow(contentString);  // 创建信息窗口对象
+	
+			var marker = new BMap.Marker(point);
+			map.addOverlay(marker);
+			marker.addEventListener("click", function(){          
+				   this.openInfoWindow(infoWindow);
+				   //图片加载完毕重绘infowindow
+				   document.getElementById('profile_img').onload = function (){
+					   infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+				   }
+				});
+		}
+		
+		
   });
 }
 
@@ -159,7 +168,7 @@ function initialize() {
     </script>
   </head>
 
-  <body>
+  <body onload="javascript:initialize();">
   
   <script src="/bootstrap.min.js"></script>
   <script src="/bootstrap.js"></script>
@@ -210,7 +219,7 @@ function initialize() {
   <td><%= request.getAttribute("rtscore") %></td>
   </tr>
   <tr>
-  <td>最近埃塔我:</td>
+  <td>最近提到我:</td>
   <td><%= request.getAttribute("mcount") %> / 100</td>
   </tr>
   </table>

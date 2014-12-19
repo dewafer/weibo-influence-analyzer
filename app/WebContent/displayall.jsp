@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Weibo Influence Analyzer</title>
+    <title>微博影响力分析器</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -69,9 +69,6 @@
 </head>
 
 <body>
-  <!-- <img src="http://www.logomaker.com/logo-images/555b7084659959ad.gif"/>
-  <a href="http://www.logomaker.com"><img src="http://www.logomaker.com/images/logos.gif" alt="logo design" border="0"/></a> -->
-
 <!-- Modal -->
   <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
@@ -92,10 +89,10 @@
       <div class="navbar-inner">
         <div class="container">
           
-          <a class="brand pull-left" href="/index.html"><em>Weibo Influence Analyzer </em><small>v1.1</small></a>
+          <a class="brand pull-left" href="/index.html"><em>微博影响力分析器 </em><small>v1.2</small></a>
 	  
           <div class="nav-collapse collapse">
-          	<a href="./" type="button" class="btn btn-primary">« Analyze again...</a>
+          	<a href="./" type="button" class="btn btn-primary">« 再分析一次...</a>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -103,13 +100,13 @@
 
   <div class="container">
   <div class="well">
-  <h2>Influencer List:</h2>
-  <h4>Record count: <%= request.getAttribute("totinf") %></h4>
+  <h2>影响力表:</h2>
+  <h4>条目数: <%= request.getAttribute("totinf") %></h4>
   <div style="background-color:white">
   	<table class="table table-hover table-bordered table-striped">
   	<thead>
   	<tr>
-  	<th>Weibo Name</th><th>Mentions</th><th>Followers</th><th>Follower Score</th><th>Retweets</th><th>Retweet Score</th><th>Total Score</th><th></th>
+  	<th>微博名</th><th>提到我</th><th>粉丝数</th><th>粉丝分数</th><th>转发数</th><th>转发分数</th><th>总分</th><th></th>
   	</tr>
   	</thead>
   	<tbody>

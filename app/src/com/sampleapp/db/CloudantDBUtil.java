@@ -117,6 +117,7 @@ public class CloudantDBUtil {
 
 			// Cloudant initialization
 			db = new SimpleCloudantDBUtil(host, dbname, username, password);
+			db.createDatabaseIfNotExists();
 
 			System.out.println("Connected to cloudant on " + host);
 
