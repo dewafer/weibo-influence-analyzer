@@ -66,6 +66,7 @@ function initialize() {
 	if(!BMap){
 		// 没有设置百度地图的AK，所以百度地图没有加载。
 		// 请在System.env中设置BAIDU_MAP_AK = 百度地图AK
+		console.log("请在System.env中设置BAIDU_MAP_AK = 百度地图AK");
 		return;
 	}
 	
@@ -123,10 +124,10 @@ function initialize() {
 			
 		%>
 		
-		loc1 = JSON.stringify("<%= location %>");
+		loc1 = <%= location %>;
 		console.log(loc1);
-		if(loc1.longitude && loc1.latitude){
-			drawBaiduPoint(new Point(loc1.longitude, loc1.latitude), '<%=text%>','<%=screenName%>','<%=prof_img%>');
+		if(loc1.coordinates){
+			drawBaiduPoint(new BMap.Point(loc1.coordinates[1], loc1.coordinates[0]), '<%=text%>','<%=screenName%>','<%=prof_img%>');
 		} else {
 			geocoder.getPoint(loc1.address, function (point) {
 				drawBaiduPoint(point, '<%=text%>','<%=screenName%>','<%=prof_img%>');
@@ -143,11 +144,11 @@ function initialize() {
 			      '</div>'+
 			      '<h3 id="firstHeading" class="firstHeading"><img id="profile_img" src='+profileImg+' class="img-rounded">'+ scrName+'</h3>'+
 			      '<div id="bodyContent">'+
-			      txt  + 
+			      text  + 
 			      '</div>'+
 			      '</div>';
 	
-			var infowindow = new BMap.InfoWindow(contentString);  // 创建信息窗口对象
+			var infoWindow = new BMap.InfoWindow(contentString);  // 创建信息窗口对象
 	
 			var marker = new BMap.Marker(point);
 			map.addOverlay(marker);
