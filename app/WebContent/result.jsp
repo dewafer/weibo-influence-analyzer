@@ -54,6 +54,9 @@
 	if(BAIDU_MAP_AK!=null){
 		%>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=<%=BAIDU_MAP_AK %>"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+		<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
 		<%
 	}
 %>
@@ -103,6 +106,7 @@ function initialize() {
     console.log(e.message);
   });
   map.addControl(geolocationControl);
+  map.enableScrollWheelZoom(true);
   
   geocoder.getPoint(address, function(point) {
 		if (point) {
@@ -110,8 +114,13 @@ function initialize() {
 		}
 		
 		var loc1;
+		var markers = []
+		var markerClusterer = null;//new BMapLib.MarkerClusterer(map);
 		<%	
 			List<Status> result1 = (List<Status>) request.getAttribute("result1");
+		%>
+		var maxLength = <%= result1.size() %>;
+		<%
 			for(Status status : result1 ) {
 				String text = status.getText().replace("\"", "'").replace("\n", " ").replace("\'", "");
 				text = " "+text+" ";
@@ -127,10 +136,27 @@ function initialize() {
 		loc1 = <%= location %>;
 		console.log(loc1);
 		if(loc1.coordinates){
-			drawBaiduPoint(new BMap.Point(loc1.coordinates[1], loc1.coordinates[0]), '<%=text%>','<%=screenName%>','<%=prof_img%>');
+		    /**
+		     * GPS坐标系类型
+		     */
+		    //BMapLib.COORD_TYPE_GPS  = 0;
+		    
+		    /**
+		     * Google 坐标系类型
+		     */
+		    //BMapLib.COORD_TYPE_GOOGLE = 2;
+
+		    /**
+		     * Baidu 坐标系类型
+		     */
+		    //var COORD_TYPE_BAIDU = 4;
+			BMap.Convertor.translate(new BMap.Point(loc1.coordinates[1], loc1.coordinates[0]),0 , function(point){
+				drawBaiduPoint(point, '<%=text%>','<%=screenName%>','<%=prof_img%>', markers);
+			});
+			
 		} else {
 			geocoder.getPoint(loc1.address, function (point) {
-				drawBaiduPoint(point, '<%=text%>','<%=screenName%>','<%=prof_img%>');
+				drawBaiduPoint(point, '<%=text%>','<%=screenName%>','<%=prof_img%>', markers);
 			});
 		}
 
@@ -138,7 +164,7 @@ function initialize() {
 			}
 		%>	
 		
-		function drawBaiduPoint (point, text, scrName, profileImg){		
+		function drawBaiduPoint (point, text, scrName, profileImg, markerCollector){		
 			var contentString = '<div id="content">'+
 			      '<div id="siteNotice">'+
 			      '</div>'+
@@ -151,17 +177,34 @@ function initialize() {
 			var infoWindow = new BMap.InfoWindow(contentString);  // 创建信息窗口对象
 	
 			var marker = new BMap.Marker(point);
-			map.addOverlay(marker);
+			//map.addOverlay(marker);
 			marker.addEventListener("click", function(){          
-				   this.openInfoWindow(infoWindow);
-				   //图片加载完毕重绘infowindow
-				   document.getElementById('profile_img').onload = function (){
-					   infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
-				   }
-				});
+			   this.openInfoWindow(infoWindow);
+			   //图片加载完毕重绘infowindow
+			   document.getElementById('profile_img').onload = function (){
+				   infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+			   }
+			});
+			while(arrayContains(markerCollector, marker)){
+				marker.getPosition().lng += (0.5 - Math.random())*0.01;
+				marker.getPosition().lat += (0.5 - Math.random())*0.01;
+			}
+			markerCollector.push(marker);
+			if(markerCollector.length == maxLength){
+				//最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+				markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markerCollector});
+			}
 		}
 		
-		
+		function arrayContains(markerArray, marker){
+			if(!markerArray || !marker) return false;
+			for(var k in markerArray){
+				if(markerArray[k].getPosition().equals(marker.getPosition())){
+					return true;
+				}
+			}
+			return false;
+		}
   });
 }
 
