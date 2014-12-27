@@ -73,15 +73,15 @@ V1.1
 
 ![001](screenshots/001.PNG "001_微博影响力分析器_主页")
 
-![002](screenshots/002.png "002_微博影响力分析器_评分结果")
+![002](screenshots/002.PNG "002_微博影响力分析器_评分结果")
 
-![003](screenshots/003.png "003_微博影响力分析器_评分结果（带地址的微博展示）")
+![003](screenshots/003.PNG "003_微博影响力分析器_评分结果（带地址的微博展示）")
 
-![004](screenshots/004.png "004_微博影响力分析器_数据库结果")
+![004](screenshots/004.PNG "004_微博影响力分析器_数据库结果")
 
-![008](screenshots/008.png "微博影响力分析器_微博登陆")
+![008](screenshots/008.PNG "微博影响力分析器_微博登陆")
 
-![007](screenshots/007.png "微博影响力分析器_微博授权")
+![007](screenshots/007.PNG "微博影响力分析器_微博授权")
 
 ![picture6](screenshots/picture6.png "picture6")
 
@@ -93,7 +93,7 @@ V1.1
 
 ![picture11](screenshots/picture11.png "picture11")
 
-![006](screenshots/006.png "006_微博影响力分析器_在Cloudant数据库中保存的数据")
+![006](screenshots/006.PNG "006_微博影响力分析器_在Cloudant数据库中保存的数据")
 
 ![005](screenshots/005.png "005_微博影响力分析器_程序结构")
 
